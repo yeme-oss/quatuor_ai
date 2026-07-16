@@ -10,7 +10,7 @@ let characters = [];
 let topic = '';
 let directorPrompt = '';
 let speed = 'normal';
-let activeModel = 'google/gemini-2.5-flash';
+let activeModel = 'openai/gpt-5.6-terra';
 let apiKeyOverride = '';
 let nextTickTimeout = null;
 

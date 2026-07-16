@@ -73,7 +73,7 @@ async function handleChat(req, res) {
           'X-Title': 'Quatuor Prototype',
         },
         body: JSON.stringify({
-          model: model || 'google/gemini-2.5-flash',
+          model: model || 'openai/gpt-5.6-terra',
           messages: [{ role: 'system', content: systemPrompt }, ...messages],
         }),
       });

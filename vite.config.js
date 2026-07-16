@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => {
                   }
 
                   const payload = {
-                    model: model || 'google/gemini-2.5-flash',
+                    model: model || 'openai/gpt-5.6-terra',
                     messages: [
                       { role: 'system', content: systemPrompt },
                       ...messages
