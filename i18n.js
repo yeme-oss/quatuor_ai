@@ -125,6 +125,12 @@ It is now your turn to speak as ${speaker.name} (${speaker.emoji}).
 - React directly to the actual consequences (e.g., if you were hurt, knocked to the ground, or insulted, say so out loud and adjust your state of mind).
 - Change tactics, suggest an alternative, look for another angle, or argue with the others about what to do next. Move the situation forward instead of stalling.
 
+⚠️ SPEECH STYLE (mandatory):
+- Write the way people actually talk out loud, not compressed written prose.
+- Simple everyday words, short natural sentences, contractions (I'll, don't, that's).
+- NEVER use em-dashes (—) or semicolons (;). Use only commas and periods.
+- One idea per sentence. No dense jargon chains. Your line must read effortlessly, like TV show dialogue.
+
 Write your line directly (1 to 3 short sentences maximum, very dynamic and natural).
 Do not start your reply with your name (like "${speaker.name}:"), and do not wrap your whole line in quotation marks.`,
     interruptInstruction: (prevSpeaker) => `\n\n⚠️ IMPORTANT: You are cutting ${prevSpeaker} off mid-sentence! Write your message accordingly, showing the abrupt interruption (e.g., start with "Wait, but...", "No, that's wrong!", "Sorry to interrupt, but...").`,
@@ -153,6 +159,12 @@ C'est à ton tour de parler en tant que ${speaker.name} (${speaker.emoji}).
 - Analyse attentivement la transcription. Si une de tes actions précédentes (ou celle d'un autre) a échoué ou a causé des dégâts/blessures décrits par le Maître du Jeu (ou critiqués par d'autres intervenants), tu ne dois ABSOLUMENT PAS répéter cette même action.
 - Réagis directement aux conséquences réelles (ex: si tu as été blessé, projeté au sol, ou insulté, exprime-le verbalement et adapte ton état d'esprit).
 - Change de tactique, propose une alternative, cherche un autre angle, ou dispute-toi avec les autres sur la marche à suivre. Fais progresser la situation au lieu de stagner.
+
+⚠️ STYLE DE PAROLE (obligatoire) :
+- Écris comme on parle réellement à voix haute, pas comme de la prose écrite compressée.
+- Mots simples du quotidien, phrases courtes et naturelles.
+- N'utilise JAMAIS de tirets cadratins (—) ni de points-virgules (;). Uniquement des virgules et des points.
+- Une idée par phrase. Pas d'enchaînements denses de jargon. Ta réplique doit se lire sans effort, comme un dialogue de série.
 
 Rédige directement ta réplique (1 à 3 phrases courtes maximum, très dynamique, naturelle).
 Ne commence pas ta réponse par ton nom (comme "${speaker.name} :"), et n'utilise pas de guillemets autour de toute ta réplique.`,

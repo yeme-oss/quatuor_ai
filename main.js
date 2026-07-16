@@ -639,6 +639,13 @@ function cleanCharacterResponse(text, name) {
   if ((clean.startsWith('"') && clean.endsWith('"')) || (clean.startsWith('«') && clean.endsWith('»'))) {
     clean = clean.slice(1, -1).trim();
   }
+
+  // Legibility guard: models love em-dashes and semicolons, which read
+  // terribly as spoken dialogue. Soften them to commas (mid-sentence only,
+  // so a leading French dialogue dash is stripped, not replaced).
+  clean = clean.replace(/^[—–]\s*/, '');
+  clean = clean.replace(/(\S)\s*[—–;]\s*(\S)/g, '$1, $2');
+
   return clean;
 }
 
