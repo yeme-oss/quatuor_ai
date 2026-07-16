@@ -70,6 +70,8 @@ npm run dev            # → http://localhost:3000
 
 You need an [OpenRouter](https://openrouter.ai/keys) API key. Either put it in `.env` (`OPENROUTER_API_KEY=sk-or-v1-...`) or paste it directly in the app's configuration sidebar — it's proxied through the local dev server and never baked into the client bundle.
 
+> 💸 **Note:** Quatuor itself is free and open source, but the LLM calls are not — each message consumes credits from your [OpenRouter](https://openrouter.ai) account, billed per token by the model you pick. Since the conversation runs forever, keep an eye on your usage (some models on OpenRouter are free-tier, if you want to watch without spending).
+
 Any OpenRouter model works: type its ID in the **Model** field in the top bar.
 
 ## Make it yours
