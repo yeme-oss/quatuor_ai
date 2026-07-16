@@ -596,7 +596,7 @@ body {
 }
 
 .message-wrapper.interruption::after {
-  content: 'COUPURE DE PAROLE ⚡';
+  content: attr(data-badge);
   position: absolute;
   top: -10px;
   right: 15px;
@@ -614,12 +614,55 @@ body {
   border-left-color: var(--color-danger);
 }
 
+/* Narrator stage events: centered golden stage directions */
+.message-wrapper.narrator-event {
+  align-self: center;
+  align-items: center;
+  max-width: 85%;
+  text-align: center;
+}
+
+.message-wrapper.narrator-event .message-meta {
+  justify-content: center;
+}
+
+.message-wrapper.narrator-event .message-bubble {
+  font-style: italic;
+  background: rgba(245, 197, 66, 0.06);
+  border: 1px dashed rgba(245, 197, 66, 0.4);
+  border-left-width: 1px;
+}
+
+/* Narrator event injection bar */
+.event-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 2rem;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.event-icon {
+  font-size: 1.1rem;
+  filter: drop-shadow(0 0 6px rgba(245, 197, 66, 0.5));
+}
+
+.event-input {
+  flex: 1;
+}
+
+.event-input:focus {
+  border-color: rgba(245, 197, 66, 0.6);
+  box-shadow: 0 0 0 2px rgba(245, 197, 66, 0.15);
+}
+
 /* Typing indicator bubble */
 .typing-indicator-container {
   padding: 1rem 2rem;
   background: linear-gradient(to top, var(--bg-primary) 70%, transparent);
   position: absolute;
-  bottom: 45px;
+  bottom: 105px;
   left: 0;
   right: 0;
   z-index: 2;

@@ -226,7 +226,7 @@ Here is the list of available characters (with their ID, name and temperament):
 {character_list}
 
 Decision rules:
-1. Analyze the recent transcript of the discussion.
+1. Analyze the recent transcript of the discussion. It may contain stage events injected by the Narrator (marked ⚡): these are things that just happened in the scene — treat them as ground truth and strongly favor the character best placed to react to the most recent one. The Narrator is never a speaker you can choose.
 2. Determine which character has the strongest reason to respond right now (for example, they were called out, their specialty is involved, or their personality would react strongly).
 3. NEVER let the same character speak twice in a row.
 4. Avoid overly mechanical turn-taking (e.g., A -> B -> C -> D -> A).
@@ -246,7 +246,7 @@ Voici la liste des personnages disponibles (avec leur ID, nom et tempérament) :
 {character_list}
 
 Règles de décision :
-1. Analyse la transcription récente de la discussion.
+1. Analyse la transcription récente de la discussion. Elle peut contenir des événements de scène injectés par le Narrateur (marqués ⚡) : ce sont des faits qui viennent de se produire dans la scène — considère-les comme la réalité et privilégie fortement le personnage le mieux placé pour réagir au plus récent. Le Narrateur n'est jamais un intervenant que tu peux choisir.
 2. Détermine quel personnage a le plus d'intérêt à répondre immédiatement (par exemple, s'il a été interpellé, si sa spécialité est concernée, ou si sa personnalité réagirait fortement).
 3. Ne fais JAMAIS parler le même personnage deux fois d'affilée.
 4. Évite une alternance trop mécanique (ex: A -> B -> C -> D -> A).

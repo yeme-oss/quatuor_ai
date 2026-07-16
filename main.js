@@ -36,6 +36,8 @@ const typingName = document.getElementById('typing-name');
 const statusDot = document.getElementById('status-dot');
 const statusText = document.getElementById('status-text');
 const statsInfo = document.getElementById('stats-info');
+const eventInput = document.getElementById('event-input');
+const eventSendBtn = document.getElementById('event-send-btn');
 
 // Translation helper: returns the UI string for the active language.
 // Dictionary values may be functions taking arguments (e.g. counts, names).
@@ -132,6 +134,12 @@ function init() {
   // Action Buttons
   playPauseBtn.addEventListener('click', togglePlayPause);
   resetBtn.addEventListener('click', resetSimulation);
+
+  // Narrator event injection
+  eventSendBtn.addEventListener('click', injectNarratorEvent);
+  eventInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') injectNarratorEvent();
+  });
 
   // Initial stats update
   updateStats();
@@ -270,6 +278,31 @@ function clearChatDom() {
   welcomeCard.classList.remove('hidden');
 }
 
+// Inject a narrator stage event into the shared transcript.
+// The Director and characters see it on the next tick; the user stays a
+// spectator — they perturb the scene, they never speak as a character.
+function injectNarratorEvent() {
+  const text = eventInput.value.trim();
+  if (!text) return;
+  eventInput.value = '';
+
+  welcomeCard.classList.add('hidden');
+
+  const message = {
+    speakerId: 'narrator',
+    name: t('narratorName'),
+    emoji: '⚡',
+    color: 'hsl(45, 90%, 55%)',
+    text,
+    timestamp: new Date().toLocaleTimeString(lang === 'fr' ? 'fr-FR' : 'en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+    mode: 'event'
+  };
+
+  messages.push(message);
+  appendMessageToDom(message);
+  updateStats();
+}
+
 // Toggle play or pause status
 function togglePlayPause() {
   if (isRunning) {
@@ -399,6 +432,9 @@ async function getDirectorDecision() {
     // Pass last 15 messages to keep payload size controlled but context rich
     const recentMessages = messages.slice(-15);
     transcript = recentMessages.map(m => {
+      if (m.mode === 'event') {
+        return `${PROMPTS[lang].eventTag}: ${m.text}`;
+      }
       const modeIndicator = m.mode === 'interrupt' ? PROMPTS[lang].interruptTag : '';
       return `${m.name} (ID: ${m.speakerId})${modeIndicator}: ${m.text}`;
     }).join('\n');
@@ -438,9 +474,10 @@ async function getDirectorDecision() {
 // Fallback Round-Robin
 function getFallbackSpeakerDecision() {
   let nextIdx = 0;
-  if (messages.length > 0) {
-    const lastSpeakerId = messages[messages.length - 1].speakerId;
-    const lastIdx = characters.findIndex(c => c.id === lastSpeakerId);
+  // Narrator events don't count as turns: rotate from the last character who spoke
+  const lastCharMessage = [...messages].reverse().find(m => m.mode !== 'event');
+  if (lastCharMessage) {
+    const lastIdx = characters.findIndex(c => c.id === lastCharMessage.speakerId);
     nextIdx = (lastIdx + 1) % characters.length;
   }
   return {
@@ -455,7 +492,11 @@ async function getCharacterReplica(speaker, mode) {
   let systemPrompt = speaker.systemPrompt;
   
   // Format history as formatted context
-  const historyText = messages.map(m => `[${m.name}]: ${m.text}`).join('\n');
+  const historyText = messages.map(m =>
+    m.mode === 'event'
+      ? `${PROMPTS[lang].eventTag}: ${m.text}`
+      : `[${m.name}]: ${m.text}`
+  ).join('\n');
   
   let instructions = PROMPTS[lang].characterInstructions({ topic, historyText, speaker });
 
@@ -564,6 +605,10 @@ function appendMessageToDom(msg) {
   msgWrapper.className = `message-wrapper self`;
   if (msg.mode === 'interrupt') {
     msgWrapper.classList.add('interruption');
+    msgWrapper.dataset.badge = t('interruptBadge');
+  }
+  if (msg.mode === 'event') {
+    msgWrapper.classList.add('narrator-event');
   }
 
   msgWrapper.style.setProperty('--char-color', msg.color);

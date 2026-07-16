@@ -42,6 +42,10 @@ export const UI = {
     charPromptPlaceholder: "Character's system prompt...",
     colorPickerTitle: 'Bubble color',
     stats: (n) => `${n} ${n === 1 ? 'line' : 'lines'}`,
+    narratorName: 'Narrator',
+    eventPlaceholder: 'Throw an event on stage... (e.g. "The lights suddenly go out")',
+    eventSend: 'Inject',
+    interruptBadge: 'INTERRUPTION ⚡',
   },
   fr: {
     scenarioLabel: 'Scénario',
@@ -83,6 +87,10 @@ export const UI = {
     charPromptPlaceholder: 'System prompt du personnage...',
     colorPickerTitle: 'Couleur de bulle',
     stats: (n) => `${n} réplique${n > 1 ? 's' : ''}`,
+    narratorName: 'Narrateur',
+    eventPlaceholder: "Lancez un événement sur scène... (ex : « Les lumières s'éteignent brusquement »)",
+    eventSend: 'Injecter',
+    interruptBadge: 'COUPURE DE PAROLE ⚡',
   },
 };
 
@@ -90,6 +98,7 @@ export const PROMPTS = {
   en: {
     emptyTranscript: "The discussion has just started. No message has been sent yet. Choose the first speaker.",
     interruptTag: ' (CUTTING IN)',
+    eventTag: '⚡ STAGE EVENT (Narrator)',
     fallbackReason: 'Fallback regulator (Round-Robin).',
     apiErrorReplica: (emoji) => `${emoji} *seems lost in thought...* (API Error)`,
     directorUserPrompt: ({ topic, transcript }) => `Main topic of the conversation: ${topic}
@@ -118,6 +127,7 @@ Do not start your reply with your name (like "${speaker.name}:"), and do not wra
   fr: {
     emptyTranscript: "La discussion vient de commencer. Aucun message n'a encore été envoyé. Choisis le premier intervenant.",
     interruptTag: ' (COUPANT LA PAROLE)',
+    eventTag: '⚡ ÉVÉNEMENT DE SCÈNE (Narrateur)',
     fallbackReason: 'Régulateur de secours (Round-Robin).',
     apiErrorReplica: (emoji) => `${emoji} *semble perdu dans ses pensées...* (Erreur API)`,
     directorUserPrompt: ({ topic, transcript }) => `Sujet principal de la conversation : ${topic}
