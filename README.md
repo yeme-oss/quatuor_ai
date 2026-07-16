@@ -56,13 +56,13 @@ Every persona is written with an **anti-stagnation rule**: characters must react
 
 ## Quick start
 
-**No Node installed?** Grab `quatuor.exe` from the [latest release](https://github.com/yeme-oss/quatuor/releases/latest) — run it, and it opens in your browser. Put your OpenRouter key in a `.env` file next to the exe (or paste it in the app's sidebar).
+**No Node installed?** Grab `quatuor.exe` from the [latest release](https://github.com/yeme-oss/quatuor_ai/releases/latest) — run it, and it opens in your browser. Put your OpenRouter key in a `.env` file next to the exe (or paste it in the app's sidebar).
 
 Otherwise, from source:
 
 ```bash
-git clone https://github.com/yeme-oss/quatuor.git
-cd quatuor
+git clone https://github.com/yeme-oss/quatuor_ai.git
+cd quatuor_ai
 npm install
 cp .env.example .env   # then paste your OpenRouter API key
 npm run dev            # → http://localhost:3000
