@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quatuor - AI Conversation Simulator</title>
+  <meta name="description" content="An interactive webapp simulating a lively discussion between 4 AI agents led by an invisible director.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <h1>QUATUOR</h1>
+        <span class="badge">PROTOTYPE</span>
+      </div>
+
+      <div class="control-panel">
+        <div class="control-group">
+          <label for="preset-select" data-i18n="scenarioLabel">Scenario</label>
+          <select id="preset-select" class="custom-select">
+            <option value="dnd">Tabletop RPG (D&D)</option>
+            <option value="vampire">Vampire: The Masquerade</option>
+            <option value="podcast">Podcast Debate</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="speed-select" data-i18n="speedLabel">Speed</label>
+          <select id="speed-select" class="custom-select">
+            <option value="fast" data-i18n="speedFast">Fast (1.5s)</option>
+            <option value="normal" selected data-i18n="speedNormal">Normal (3s)</option>
+            <option value="slow" data-i18n="speedSlow">Slow (5s)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="model-select" data-i18n="modelLabel">Model</label>
+          <input type="text" id="model-select" class="custom-input" value="google/gemini-2.5-flash">
+        </div>
+
+        <div class="button-group">
+          <button id="play-pause-btn" class="btn btn-primary">
+            <svg class="icon play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="icon pause-icon hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            <span class="btn-text">Start</span>
+          </button>
+          <button id="reset-btn" class="btn btn-secondary">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+            <span data-i18n="reset">Reset</span>
+          </button>
+          <button id="lang-toggle-btn" class="btn btn-secondary btn-lang" data-i18n="langBtnLabel" data-i18n-title="langBtnTitle" title="Passer en français">FR</button>
+          <button id="toggle-config-btn" class="btn btn-icon" data-i18n-title="configBtnTitle" title="Configure characters">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-layout">
+      <!-- Sidebar / Config panel -->
+      <aside class="config-sidebar" id="config-sidebar">
+        <div class="sidebar-header">
+          <h2 data-i18n="sidebarTitle">Configuration</h2>
+          <button id="close-sidebar-btn" class="btn-close">&times;</button>
+        </div>
+
+        <div class="sidebar-content">
+          <!-- API Overrides -->
+          <div class="config-card api-card">
+            <h3 data-i18n="apiKeyTitle">🔑 OpenRouter API Key</h3>
+            <p class="help-text" data-i18n="apiKeyHelp">Uses the key from the <code>.env</code> file by default. You can override it here if needed.</p>
+            <input type="password" id="api-key-input" class="custom-input" placeholder="sk-or-v1-...">
+          </div>
+
+          <!-- Subject/Prompt seed -->
+          <div class="config-card">
+            <h3 data-i18n="topicTitle">🎯 Topic / Initial Situation</h3>
+            <textarea id="topic-input" class="custom-textarea" rows="3" data-i18n-placeholder="topicPlaceholder" placeholder="Discussion topic..."></textarea>
+          </div>
+
+          <!-- Characters Config Area -->
+          <div class="config-card">
+            <h3 data-i18n="charactersTitle">👥 The 4 Characters</h3>
+            <div id="characters-config-container" class="characters-list-config">
+              <!-- Character edit cards will be generated dynamically here -->
+            </div>
+          </div>
+
+          <!-- Director Prompt Override -->
+          <div class="config-card">
+            <details class="director-details">
+              <summary data-i18n="directorSummary">🎬 Director Prompt</summary>
+              <div class="details-content">
+                <p class="help-text" data-i18n="directorHelp">The Director decides who speaks next and whether an interruption occurs.</p>
+                <textarea id="director-prompt-input" class="custom-textarea" rows="8"></textarea>
+              </div>
+            </details>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Chat Screen Area -->
+      <main class="chat-container">
+        <div class="chat-messages" id="chat-messages">
+          <!-- Welcome instructions / Init state -->
+          <div class="welcome-card" id="welcome-card">
+            <div class="welcome-icon">🎭</div>
+            <h2 data-i18n="welcomeTitle">Welcome to Quatuor</h2>
+            <p data-i18n="welcomeSubtitle">An autonomous AI-powered group conversation simulator.</p>
+            <div class="welcome-steps">
+              <div class="step">
+                <span class="step-num">1</span>
+                <span data-i18n="welcomeStep1">Pick or tweak your scenario in the top bar or the configuration panel.</span>
+              </div>
+              <div class="step">
+                <span class="step-num">2</span>
+                <span data-i18n="welcomeStep2">Make sure an OpenRouter API key is configured (in the <code>.env</code> file or above).</span>
+              </div>
+              <div class="step">
+                <span class="step-num">3</span>
+                <span data-i18n="welcomeStep3">Click <strong>Start</strong> to launch the infinite loop!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing status indicator -->
+        <div class="typing-indicator-container hidden" id="typing-indicator">
+          <div class="typing-bubble">
+            <span class="typing-avatar" id="typing-avatar">🤖</span>
+            <span class="typing-name" id="typing-name">Elara</span>
+            <span class="typing-text" data-i18n="typingText">is thinking...</span>
+            <div class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sticky Status Footer -->
+        <footer class="chat-footer">
+          <div class="status-indicator">
+            <span class="status-dot inactive" id="status-dot"></span>
+            <span class="status-text" id="status-text">Ready to start</span>
+          </div>
+          <div class="stats-info" id="stats-info">
+            0 lines
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
