@@ -3,10 +3,22 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "bin": "server.cjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.cjs",
+    "build:exe": "vite build && npx @yao-pkg/pkg ."
+  },
+  "pkg": {
+    "assets": [
+      "dist/**/*"
+    ],
+    "targets": [
+      "node22-win-x64"
+    ],
+    "outputPath": "release"
   },
   "devDependencies": {
     "vite": "^5.0.0"
