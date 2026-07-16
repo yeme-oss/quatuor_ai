@@ -77,10 +77,14 @@
             <input type="password" id="api-key-input" class="custom-input" placeholder="sk-or-v1-...">
           </div>
 
-          <!-- Subject/Prompt seed -->
+          <!-- Situation (evolves as the story moves forward) -->
           <div class="config-card">
-            <h3 data-i18n="topicTitle">🎯 Topic / Initial Situation</h3>
-            <textarea id="topic-input" class="custom-textarea" rows="3" data-i18n-placeholder="topicPlaceholder" placeholder="Discussion topic..."></textarea>
+            <h3 data-i18n="topicTitle">🎯 Situation</h3>
+            <textarea id="topic-input" class="custom-textarea" rows="3" data-i18n-placeholder="topicPlaceholder" placeholder="Current situation of the scene..."></textarea>
+            <details class="director-details past-situations">
+              <summary id="past-situations-summary">📜 Past situations (0)</summary>
+              <div class="details-content" id="past-situations-list"></div>
+            </details>
           </div>
 
           <!-- Characters Config Area -->

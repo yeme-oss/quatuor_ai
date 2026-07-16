@@ -19,8 +19,11 @@ export const UI = {
     sidebarTitle: 'Configuration',
     apiKeyTitle: '🔑 OpenRouter API Key',
     apiKeyHelp: 'Uses the key from the <code>.env</code> file by default. You can override it here if needed.',
-    topicTitle: '🎯 Topic / Initial Situation',
-    topicPlaceholder: 'Discussion topic...',
+    topicTitle: '🎯 Situation',
+    topicPlaceholder: 'Current situation of the scene...',
+    pastSituationsTitle: (n) => `📜 Past situations (${n})`,
+    pastSituationsEmpty: "No past situations yet — the story hasn't moved.",
+    pastSituationRestore: 'Click to make this the current situation again',
     charactersTitle: '👥 The 4 Characters',
     directorSummary: '🎬 Director Prompt',
     directorHelp: 'The Director decides who speaks next and whether an interruption occurs.',
@@ -64,8 +67,11 @@ export const UI = {
     sidebarTitle: 'Configuration',
     apiKeyTitle: '🔑 Clé API OpenRouter',
     apiKeyHelp: "Utilise la clé du fichier <code>.env</code> par défaut. Vous pouvez l'écraser ici si besoin.",
-    topicTitle: '🎯 Sujet / Situation Initiale',
-    topicPlaceholder: 'Sujet de la discussion...',
+    topicTitle: '🎯 Situation',
+    topicPlaceholder: 'Situation actuelle de la scène...',
+    pastSituationsTitle: (n) => `📜 Situations passées (${n})`,
+    pastSituationsEmpty: "Aucune situation passée — l'histoire n'a pas encore évolué.",
+    pastSituationRestore: 'Cliquez pour redéfinir cette situation comme actuelle',
     charactersTitle: '👥 Les 4 Personnages',
     directorSummary: '🎬 Invite du Régisseur (Director)',
     directorHelp: "Le Régisseur décide qui parle et si une interruption a lieu.",
@@ -101,14 +107,14 @@ export const PROMPTS = {
     eventTag: '⚡ STAGE EVENT (Narrator)',
     fallbackReason: 'Fallback regulator (Round-Robin).',
     apiErrorReplica: (emoji) => `${emoji} *seems lost in thought...* (API Error)`,
-    directorUserPrompt: ({ topic, transcript }) => `Main topic of the conversation: ${topic}
-
+    directorUserPrompt: ({ situation, pastSituations, transcript }) => `Current situation of the scene: ${situation}
+${pastSituations.length ? `\nPast situations (the story so far, oldest first):\n${pastSituations.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n` : ''}
 Here is the current state of the discussion:
 ${transcript}
 
-Choose the next speaker and reply in strict JSON format.`,
-    characterInstructions: ({ topic, historyText, speaker }) => `Discussion topic: ${topic}
-
+Choose the next speaker, update the situation if the story has moved forward, and reply in strict JSON format.`,
+    characterInstructions: ({ situation, pastSituations, historyText, speaker }) => `Current situation of the scene: ${situation}
+${pastSituations.length ? `\nThe story so far went through these past situations (oldest first):\n${pastSituations.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n` : ''}
 Here is the transcript of the discussion so far:
 ${historyText || '(Start of the conversation)'}
 
@@ -130,14 +136,14 @@ Do not start your reply with your name (like "${speaker.name}:"), and do not wra
     eventTag: '⚡ ÉVÉNEMENT DE SCÈNE (Narrateur)',
     fallbackReason: 'Régulateur de secours (Round-Robin).',
     apiErrorReplica: (emoji) => `${emoji} *semble perdu dans ses pensées...* (Erreur API)`,
-    directorUserPrompt: ({ topic, transcript }) => `Sujet principal de la conversation : ${topic}
-
+    directorUserPrompt: ({ situation, pastSituations, transcript }) => `Situation actuelle de la scène : ${situation}
+${pastSituations.length ? `\nSituations passées (l'histoire jusqu'ici, de la plus ancienne à la plus récente) :\n${pastSituations.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n` : ''}
 Voici l'état actuel de la discussion :
 ${transcript}
 
-Choisis le prochain intervenant et réponds au format JSON strict.`,
-    characterInstructions: ({ topic, historyText, speaker }) => `Sujet de discussion : ${topic}
-
+Choisis le prochain intervenant, mets à jour la situation si l'histoire a progressé, et réponds au format JSON strict.`,
+    characterInstructions: ({ situation, pastSituations, historyText, speaker }) => `Situation actuelle de la scène : ${situation}
+${pastSituations.length ? `\nL'histoire est passée par ces situations (de la plus ancienne à la plus récente) :\n${pastSituations.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n` : ''}
 Voici la transcription de la discussion jusqu'ici :
 ${historyText || '(Début de la conversation)'}
 

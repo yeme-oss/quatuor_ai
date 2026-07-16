@@ -233,10 +233,12 @@ Decision rules:
 5. Determine the mode:
    - 'continue': the character speaks normally after the previous one.
    - 'interrupt': the character cuts in abruptly (e.g., if the previous speaker said something the selected character finds unacceptable or wrong, or if the situation is urgent). Use 'interrupt' from time to time to add energy (at most 15-20% of the time).
-6. You MUST reply EXCLUSIVELY with a valid JSON object containing exactly these three keys:
+6. Update the situation: from the recent transcript, describe the CURRENT situation of the scene in 1-2 sentences. If the story has moved forward (obstacle overcome, new location, revelation, new threat, topic shift), write the NEW situation. If nothing has changed, restate the current situation word for word. Never let the story stall: if the same situation has persisted for several turns, introduce a plausible development.
+7. You MUST reply EXCLUSIVELY with a valid JSON object containing exactly these four keys:
    - "next_speaker": (string) the ID of the chosen character (from the list above).
    - "mode": (string) "continue" or "interrupt".
    - "reason": (string) a short explanation of your choice for debugging (1 sentence).
+   - "situation": (string) the updated current situation of the scene (1-2 sentences).
 
 Return no other text before or after the JSON.`,
   fr: `Tu es le Régisseur (Director) d'une simulation de conversation entre 4 personnages.
@@ -253,10 +255,12 @@ Règles de décision :
 5. Détermine le mode :
    - 'continue' : le personnage parle normalement après le précédent.
    - 'interrupt' : le personnage coupe la parole de manière abrupte (ex: si le personnage précédent disait quelque chose d'inacceptable ou d'erroné selon le personnage sélectionné, ou si l'action requiert de l'urgence). Utilise 'interrupt' de temps en temps pour ajouter du dynamisme (maximum 15-20% du temps).
-6. Tu DOIS répondre EXCLUSIVEMENT sous la forme d'un objet JSON valide contenant exactement ces trois clés :
+6. Mets à jour la situation : à partir de la transcription récente, décris la situation ACTUELLE de la scène en 1-2 phrases. Si l'histoire a progressé (obstacle surmonté, nouveau lieu, révélation, nouvelle menace, changement de sujet), écris la NOUVELLE situation. Si rien n'a changé, reprends la situation actuelle mot pour mot. Ne laisse jamais l'histoire stagner : si la même situation persiste depuis plusieurs tours, introduis un développement plausible.
+7. Tu DOIS répondre EXCLUSIVEMENT sous la forme d'un objet JSON valide contenant exactement ces quatre clés :
    - "next_speaker": (string) l'ID du personnage choisi (parmi ceux listés ci-dessus).
    - "mode": (string) "continue" ou "interrupt".
    - "reason": (string) une courte explication de ton choix pour le débogage (1 phrase).
+   - "situation": (string) la situation actuelle mise à jour de la scène (1-2 phrases).
 
 Ne renvoie aucun autre texte avant ou après le JSON.`
 };

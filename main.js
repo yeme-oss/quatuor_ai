@@ -7,7 +7,8 @@ let activePresetId = 'dnd';
 let isRunning = false;
 let messages = [];
 let characters = [];
-let topic = '';
+let situation = '';
+let pastSituations = [];
 let directorPrompt = '';
 let speed = 'normal';
 let activeModel = 'openai/gpt-5.6-terra';
@@ -38,6 +39,8 @@ const statusText = document.getElementById('status-text');
 const statsInfo = document.getElementById('stats-info');
 const eventInput = document.getElementById('event-input');
 const eventSendBtn = document.getElementById('event-send-btn');
+const pastSituationsSummary = document.getElementById('past-situations-summary');
+const pastSituationsList = document.getElementById('past-situations-list');
 
 // Translation helper: returns the UI string for the active language.
 // Dictionary values may be functions taking arguments (e.g. counts, names).
@@ -73,6 +76,8 @@ function applyTranslations() {
   // Play/pause button label depends on simulation state
   playPauseBtn.querySelector('.btn-text').textContent =
     isRunning ? t('pause') : (messages.length > 0 ? t('resume') : t('start'));
+
+  renderPastSituations();
 }
 
 function switchLanguage() {
@@ -124,7 +129,7 @@ function init() {
   });
 
   topicInput.addEventListener('input', (e) => {
-    topic = e.target.value;
+    situation = e.target.value;
   });
 
   directorPromptInput.addEventListener('input', (e) => {
@@ -155,9 +160,11 @@ function loadPreset(presetId) {
   const preset = PRESETS[lang][presetId];
   if (!preset) return;
 
-  // Set topic
-  topic = preset.defaultTopic;
-  topicInput.value = topic;
+  // Set initial situation
+  situation = preset.defaultTopic;
+  topicInput.value = situation;
+  pastSituations = [];
+  renderPastSituations();
 
   // Clone characters to allow edits without affecting original preset object
   characters = JSON.parse(JSON.stringify(preset.characters));
@@ -278,6 +285,45 @@ function clearChatDom() {
   welcomeCard.classList.remove('hidden');
 }
 
+// The Director returns an updated situation each turn; when it actually
+// changes, the old one is archived in the Past Situations log.
+function updateSituation(next) {
+  const cleaned = (next || '').trim();
+  if (!cleaned || cleaned === situation.trim()) return;
+
+  pastSituations.push(situation);
+  situation = cleaned;
+  topicInput.value = cleaned;
+  renderPastSituations();
+}
+
+// Render the clickable Past Situations log (most recent first).
+// Clicking an entry makes it the current situation again.
+function renderPastSituations() {
+  pastSituationsSummary.textContent = t('pastSituationsTitle', pastSituations.length);
+  pastSituationsList.innerHTML = '';
+
+  if (pastSituations.length === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'help-text';
+    empty.textContent = t('pastSituationsEmpty');
+    pastSituationsList.appendChild(empty);
+    return;
+  }
+
+  [...pastSituations].reverse().forEach((text, revIdx) => {
+    const num = pastSituations.length - revIdx;
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'past-situation-item';
+    item.title = t('pastSituationRestore');
+    item.innerHTML = `<span class="psi-num">${num}</span>`;
+    item.appendChild(document.createTextNode(text));
+    item.addEventListener('click', () => updateSituation(text));
+    pastSituationsList.appendChild(item);
+  });
+}
+
 // Inject a narrator stage event into the shared transcript.
 // The Director and characters see it on the next tick; the user stays a
 // spectator — they perturb the scene, they never speak as a character.
@@ -352,6 +398,13 @@ function pauseSimulation() {
 function resetSimulation() {
   pauseSimulation();
   messages = [];
+  // Rewind the story to its opening situation
+  if (pastSituations.length > 0) {
+    situation = pastSituations[0];
+    topicInput.value = situation;
+    pastSituations = [];
+    renderPastSituations();
+  }
   clearChatDom();
   updateStats();
   statusDot.className = 'status-dot inactive';
@@ -371,6 +424,9 @@ async function tick() {
     const nextSpeakerId = directorDecision.next_speaker;
     const mode = directorDecision.mode || 'continue';
     const reason = directorDecision.reason || 'Ordre logique de discussion.';
+
+    // Let the Director move the story forward
+    updateSituation(directorDecision.situation);
     
     console.log(`[Régisseur] Décision: ${nextSpeakerId} (${mode}). Raison: ${reason}`);
 
@@ -440,7 +496,7 @@ async function getDirectorDecision() {
     }).join('\n');
   }
 
-  const prompt = PROMPTS[lang].directorUserPrompt({ topic, transcript });
+  const prompt = PROMPTS[lang].directorUserPrompt({ situation, pastSituations, transcript });
 
   try {
     const response = await callChatApi(
@@ -498,7 +554,7 @@ async function getCharacterReplica(speaker, mode) {
       : `[${m.name}]: ${m.text}`
   ).join('\n');
   
-  let instructions = PROMPTS[lang].characterInstructions({ topic, historyText, speaker });
+  let instructions = PROMPTS[lang].characterInstructions({ situation, pastSituations, historyText, speaker });
 
   if (mode === 'interrupt' && messages.length > 0) {
     const prevSpeaker = messages[messages.length - 1].name;

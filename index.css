@@ -448,6 +448,39 @@ body {
   gap: 0.5rem;
 }
 
+/* Past situations log */
+.past-situations {
+  margin-top: 0.75rem;
+}
+
+.past-situation-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-main);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.past-situation-item:hover {
+  color: var(--text-primary);
+  border-color: rgba(245, 197, 66, 0.5);
+  background: rgba(245, 197, 66, 0.05);
+}
+
+.past-situation-item .psi-num {
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-right: 0.45rem;
+}
+
 /* Chat container */
 .chat-container {
   flex: 1;
